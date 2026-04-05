@@ -1,66 +1,37 @@
-package com.spring.taskAPI.entity;
+package com.spring.taskAPI.dto;
 
 import java.time.LocalDate;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.spring.taskAPI.entity.Priority;
+import com.spring.taskAPI.entity.Status;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class TaskDto {
+	
     private Long id;
 
-    @Column(name = "title")
     @NotBlank(message = "title of task cannot be empty")
     private String title;
 
-    @Column(name = "description")
     @NotBlank(message = "description cannot be empty")
     private String description;
 
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
     @NotNull(message = "status cannot be null")
     private Status status;
 
-    @Column(name = "priority", nullable = false)
-    @Enumerated(EnumType.STRING)
     @NotNull(message = "priority cannot be null")
     private Priority priority;
-
-    @Column(name = "comp_date")
     private LocalDate dateConcl;
-
-    @Column(name = "deadline")
     @NotNull(message = "deadline cannot be null")
     private LocalDate deadline;
 
-    @Column(name = "date_creation")
     @NotNull(message = "createdAt cannot be null")
     private LocalDate createdAt;
 
-	public Task() {}
-
-	private Task(Builder builder) {
-		this.id = builder.id;
-		this.title = builder.title;
-		this.description = builder.description;
-		this.status = builder.status;
-		this.priority = builder.priority;
-		this.dateConcl = builder.dateConcl;
-		this.deadline = builder.deadline;
-		this.createdAt = builder.createdAt;
-	}
-
+	public TaskDto() {}
 	
 	public LocalDate getDateConcl() {
 		return dateConcl;
@@ -103,6 +74,17 @@ public class Task {
 	}
 	public void setPriority(Priority priority) {
 		this.priority = priority;
+	}
+	
+	private TaskDto(Builder builder) {
+		this.id = builder.id;
+		this.title = builder.title;
+		this.description = builder.description;
+		this.status = builder.status;
+		this.priority = builder.priority;
+		this.dateConcl = builder.dateConcl;
+		this.deadline = builder.deadline;
+		this.createdAt = builder.createdAt;
 	}
 	public static Builder builder() {
 		return new Builder();
@@ -160,11 +142,11 @@ public class Task {
 			return this;
 		}
 
-		public Task build() {
-			return new Task(this);
+		public TaskDto build() {
+			return new TaskDto(this);
 		}
 	}
-
+	
 	
 
 }
