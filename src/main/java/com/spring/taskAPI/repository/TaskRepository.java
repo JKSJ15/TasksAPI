@@ -11,7 +11,6 @@ import com.spring.taskAPI.entity.Task;
 public interface TaskRepository extends JpaRepository<Task, Long>{
 
 	Page<Task> findByTitleContainingIgnoreCase(String title, Pageable pageable);
-	Page<Task> findByStatusContainingIgnoreCase(Status status, Pageable pageable);
-	Page<Task> findByPriorityContainingIgnoreCase(Priority priority, Pageable pageable);
-
+	Page<Task> findByStatus(Status status, Pageable pageable);
+	Page<Task> findByPriority(Priority priority, Pageable pageable);
 }

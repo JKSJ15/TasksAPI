@@ -27,9 +27,9 @@ public class TaskService {
 		if (title!=null) {
 			tasks = tr.findByTitleContainingIgnoreCase(title, pageable);
 		}else if (status!=null) {
-			tasks = tr.findByStatusContainingIgnoreCase(status, pageable);
+			tasks = tr.findByStatus(status, pageable);
 		}else if (priority!=null) {
-			tasks = tr.findByPriorityContainingIgnoreCase(priority, pageable);
+			tasks = tr.findByPriority(priority, pageable);
 		}else {
 			tasks = tr.findAll(pageable);
 		}
@@ -37,7 +37,13 @@ public class TaskService {
 	}
 	
 	public TaskDto save(TaskDto dto) {
+		if (dto.getDeadline().isBefore(LocalDate.now())) {
+			throw new InvalidAtributeException("Deadline cannot be in the past");
+		}
 		Task task = TaskMapper.toTask(dto);
+		if (task.getStatus() == Status.COMPLETED) {
+			task.setDateConcl(LocalDate.now());
+		}
 		tr.save(task);
 		return TaskMapper.toDto(task);
 	}
@@ -45,6 +51,9 @@ public class TaskService {
 	public TaskDto update(Long id,TaskDto dto){
 		if (dto.getDeadline().isBefore(LocalDate.now())) {
 			throw new InvalidAtributeException("Deadline cannot be in the past");
+		}
+		if (!dto.getId().equals(id)) {
+			throw new InvalidAtributeException("IDs of insert and saved don't combined!");
 		}
 		Task task = tr.findById(id).orElseThrow(()->new TaskNotFoundException("Task not found!"));
 		task.setTitle(dto.getTitle());

@@ -11,13 +11,13 @@ import com.spring.taskAPI.exception.TaskNotFoundException;
 
 @RestControllerAdvice
 public class GlobalExceptionsHandler {
-	@ExceptionHandler
+	@ExceptionHandler(value = InvalidAtributeException.class)
 	public ResponseEntity<BodyExceptions> useInvalidAtributeException(InvalidAtributeException e){
 		BodyExceptions body = BodyExceptions.builder().withMessage(e.getMessage()).withTimestamp(LocalDateTime.now())
 		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.BAD_REQUEST.value()).build();
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
 	}
-	@ExceptionHandler
+	@ExceptionHandler(value = TaskNotFoundException.class)
 	public ResponseEntity<BodyExceptions> useTaskNotFoundException(TaskNotFoundException e){
 		BodyExceptions body = BodyExceptions.builder().withMessage(e.getMessage()).withTimestamp(LocalDateTime.now())
 		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.BAD_REQUEST.value()).build();

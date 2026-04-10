@@ -3,10 +3,7 @@ package com.spring.taskAPI.dto;
 import java.time.LocalDate;
 import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
-
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public class TaskDto {

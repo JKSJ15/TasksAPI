@@ -8,6 +8,38 @@ public class BodyExceptions {
 	private LocalDateTime timestamp;
 	private HttpStatus erro;
 	private int status;
+	
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(LocalDateTime timestamp) {
+		this.timestamp = timestamp;
+	}
+
+	public HttpStatus getErro() {
+		return erro;
+	}
+
+	public void setErro(HttpStatus erro) {
+		this.erro = erro;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	private BodyExceptions(Builder builder) {
 		this.message = builder.message;
