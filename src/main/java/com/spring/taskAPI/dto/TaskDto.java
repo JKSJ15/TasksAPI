@@ -30,6 +30,11 @@ public class TaskDto {
 
 	public TaskDto() {}
 	
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public LocalDate getDateConcl() {
 		return dateConcl;
 	}
@@ -143,6 +148,7 @@ public class TaskDto {
 			return new TaskDto(this);
 		}
 	}
+	
 	
 	
 

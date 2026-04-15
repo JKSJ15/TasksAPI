@@ -36,6 +36,10 @@ public class TaskController {
 			@RequestParam(required = false) Priority priority){
 		return new ResponseEntity<>(ts.list(title, status, priority, pageable),HttpStatus.OK);
 	}
+	@GetMapping("/{id}")
+	public ResponseEntity<TaskDto> findById(@PathVariable long id){
+		return new ResponseEntity<>(ts.findById(id),HttpStatus.OK);
+	}
 	@PostMapping
 	public ResponseEntity<TaskDto> save(@RequestBody @Valid TaskDto dto){
 		return new ResponseEntity<>(ts.save(dto),HttpStatus.CREATED);

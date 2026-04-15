@@ -1,6 +1,8 @@
 package com.spring.taskAPI.service;
 
 import java.time.LocalDate;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,11 @@ public class TaskService {
 		}
 		return tasks.map(TaskMapper::toDto);
 	}
-	
+	public TaskDto findById(long id){
+		Task task = tr.findById(id).orElseThrow(()->new TaskNotFoundException("Task not found!"));
+		return TaskMapper.toDto(task);
+		
+	}
 	public TaskDto save(TaskDto dto) {
 		if (dto.getDeadline().isBefore(LocalDate.now())) {
 			throw new InvalidAtributeException("Deadline cannot be in the past");
@@ -47,7 +53,6 @@ public class TaskService {
 		tr.save(task);
 		return TaskMapper.toDto(task);
 	}
-	
 	public TaskDto update(Long id,TaskDto dto){
 		if (dto.getDeadline().isBefore(LocalDate.now())) {
 			throw new InvalidAtributeException("Deadline cannot be in the past");
@@ -67,10 +72,8 @@ public class TaskService {
 		tr.save(task);
 		return TaskMapper.toDto(task);
 	}
-	
 	public void delete(long id) {
 		Task taskToBeDelete = tr.findById(id).orElseThrow(()-> new TaskNotFoundException("Task not found!"));
 		tr.delete(taskToBeDelete);
 	}
-	
 }

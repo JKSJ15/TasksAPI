@@ -60,6 +60,10 @@ public class Task {
 	}
 
 	
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public LocalDate getDateConcl() {
 		return dateConcl;
 	}
@@ -162,6 +166,7 @@ public class Task {
 			return new Task(this);
 		}
 	}
+	
 
 	
 
