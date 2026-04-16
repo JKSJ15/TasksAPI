@@ -40,7 +40,6 @@ public class TaskService {
 	public TaskDto findById(long id){
 		Task task = tr.findById(id).orElseThrow(()->new TaskNotFoundException("Task not found!"));
 		return TaskMapper.toDto(task);
-		
 	}
 	public TaskDto save(TaskDto dto) {
 		if (dto.getDeadline().isBefore(LocalDate.now())) {
@@ -50,8 +49,8 @@ public class TaskService {
 		if (task.getStatus() == Status.COMPLETED) {
 			task.setDateConcl(LocalDate.now());
 		}
-		tr.save(task);
-		return TaskMapper.toDto(task);
+		Task taskSaved = tr.save(task);
+		return TaskMapper.toDto(taskSaved);
 	}
 	public TaskDto update(Long id,TaskDto dto){
 		if (dto.getDeadline().isBefore(LocalDate.now())) {

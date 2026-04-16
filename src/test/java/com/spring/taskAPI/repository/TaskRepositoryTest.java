@@ -1,7 +1,6 @@
 package com.spring.taskAPI.repository;
 
 import java.util.Optional;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,7 @@ import com.spring.taskAPI.entity.Task;
 import com.spring.taskAPI.util.TaskUtilTest;
 
 @DataJpaTest
-public class TestRepository {
+public class TaskRepositoryTest {
 	@Autowired
 	TaskRepository rep;
 	
@@ -86,8 +85,8 @@ public class TestRepository {
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
 	@Test
-	@DisplayName("findByTitleContainingIgnoreCase return empty When Not Find")
-	void findByTitleContainingIgnoreCase_returnEmpty_WhenNotFind() {
+	@DisplayName("findByTitleContainingIgnoreCase return empty When Not Found")
+	void findByTitleContainingIgnoreCase_returnEmpty_WhenNotFound() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Page<Task> optional = rep.findByTitleContainingIgnoreCase("OS99DASUST", pageable);
 		

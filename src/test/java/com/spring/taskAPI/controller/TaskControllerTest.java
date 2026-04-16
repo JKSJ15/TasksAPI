@@ -1,7 +1,6 @@
 package com.spring.taskAPI.controller;
 
 import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import com.spring.taskAPI.dto.TaskDto;
 import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
