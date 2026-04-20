@@ -80,7 +80,7 @@ public class TaskRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
 		rep.save(task);
-		Page<Task> optional = rep.findByTitleContainingIgnoreCase("Walk With Dog", pageable);
+		Page<Task> optional = rep.findByTitleContainingIgnoreCaseAndUserLogin("Walk With Dog","alberto", pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
@@ -88,7 +88,7 @@ public class TaskRepositoryTest {
 	@DisplayName("findByTitleContainingIgnoreCase return empty When Not Found")
 	void findByTitleContainingIgnoreCase_returnEmpty_WhenNotFound() {
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<Task> optional = rep.findByTitleContainingIgnoreCase("OS99DASUST", pageable);
+		Page<Task> optional = rep.findByTitleContainingIgnoreCaseAndUserLogin("OS99DASUST","alberto", pageable);
 		
 		Assertions.assertThat(optional).isEmpty();
 	}
@@ -99,7 +99,7 @@ public class TaskRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
 		rep.save(task);
-		Page<Task> optional = rep.findByStatus(Status.PENDING, pageable);
+		Page<Task> optional = rep.findByStatusAndUserLogin(Status.PENDING,"alberto", pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
@@ -107,7 +107,7 @@ public class TaskRepositoryTest {
 	@DisplayName("findByStatus return empty When Not Find")
 	void findByStatus_returnEmpty_WhenNotFind() {
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<Task> optional = rep.findByStatus(Status.COMPLETED, pageable);
+		Page<Task> optional = rep.findByStatusAndUserLogin(Status.COMPLETED,"alberto", pageable);
 		
 		Assertions.assertThat(optional).isEmpty();
 	}
@@ -118,7 +118,7 @@ public class TaskRepositoryTest {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
 		rep.save(task);
-		Page<Task> optional = rep.findByPriority(Priority.MEDIUM, pageable);
+		Page<Task> optional = rep.findByPriorityAndUserLogin(Priority.MEDIUM,"karlao", pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
@@ -126,7 +126,7 @@ public class TaskRepositoryTest {
 	@DisplayName("findByPriority return empty When Not Find")
 	void findByPriority_returnEmpty_WhenNotFind() {
 		Pageable pageable = PageRequest.of(0, 10);
-		Page<Task> optional = rep.findByPriority(Priority.LOW, pageable);
+		Page<Task> optional = rep.findByPriorityAndUserLogin(Priority.LOW,"karlao", pageable);
 		
 		Assertions.assertThat(optional).isEmpty();
 	}
