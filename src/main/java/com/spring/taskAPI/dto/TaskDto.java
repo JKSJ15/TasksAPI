@@ -1,8 +1,13 @@
 package com.spring.taskAPI.dto;
 
 import java.time.LocalDate;
+
 import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
+import com.spring.taskAPI.entity.User;
+import com.spring.taskAPI.entity.Task.Builder;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -11,22 +16,42 @@ public class TaskDto {
     private Long id;
 
     @NotBlank(message = "title of task cannot be empty")
+    @Schema(example = "Wash the dishes")
     private String title;
 
     @NotBlank(message = "description cannot be empty")
+    @Schema(example = "Wash dishes at the morning")
     private String description;
 
     @NotNull(message = "status cannot be null")
+    @Schema(example = "PENDING")
     private Status status;
 
     @NotNull(message = "priority cannot be null")
+    @Schema(example = "MEDIUM")
     private Priority priority;
+    
+    @Schema(
+    	    description = "Date when the task was completed",
+    	    example = "2026-05-07",
+    	    accessMode = Schema.AccessMode.READ_ONLY
+    	)
     private LocalDate dateConcl;
+    
     @NotNull(message = "deadline cannot be null")
+    @Schema(
+            description = "Deadline to complete the task",
+            example = "2026-05-06"
+        )
     private LocalDate deadline;
 
     @NotNull(message = "createdAt cannot be null")
+    @Schema(
+        description = "Date the task was originally created",
+        example = "2026-05-06"
+    )
     private LocalDate createdAt;
+    
 
 	public TaskDto() {}
 	

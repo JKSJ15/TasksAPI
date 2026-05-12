@@ -24,12 +24,19 @@ public class SecurityConfig {
 		this.filter = filter;
 	}
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable())
-				.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+				.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.httpBasic(Customizer.withDefaults())
 				.authorizeHttpRequests(authorize -> authorize
 				.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+				.requestMatchers("/tasks-doc/**",
+	                    "/tasks-doc",
+	                    "/tasks-api-docs/**",
+	                    "/tasks-api-docs",
+	                    "/swagger-ui/**",
+	                    "/actuator/prometheus",
+	            	    "/actuator/health").permitAll()
 				.anyRequest().authenticated())
 				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
 				.build();

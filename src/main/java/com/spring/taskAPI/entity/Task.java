@@ -64,6 +64,7 @@ public class Task {
 		this.dateConcl = builder.dateConcl;
 		this.deadline = builder.deadline;
 		this.createdAt = builder.createdAt;
+		 this.user = builder.user;
 	}
 
 	public User getUser() {
@@ -131,6 +132,7 @@ public class Task {
 		private LocalDate dateConcl;
 		private LocalDate deadline;
 		private LocalDate createdAt;
+		private User user;
 
 		private Builder() {
 		}
@@ -174,10 +176,17 @@ public class Task {
 			this.createdAt = createdAt;
 			return this;
 		}
+		
+		public Builder withUser(User user) {
+			this.user = user;
+			return this;
+		}
 
 		public Task build() {
 			return new Task(this);
 		}
+
+		
 	}
 	
 

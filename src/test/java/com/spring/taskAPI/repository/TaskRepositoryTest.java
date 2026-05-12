@@ -1,23 +1,36 @@
 package com.spring.taskAPI.repository;
 
 import java.util.Optional;
+
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
 import com.spring.taskAPI.entity.Task;
+import com.spring.taskAPI.entity.User;
 import com.spring.taskAPI.util.TaskUtilTest;
 
 @DataJpaTest
 public class TaskRepositoryTest {
 	@Autowired
 	TaskRepository rep;
+	@Autowired
+	UserRepository userRep;
+	User user;
+	
+	@BeforeEach
+	void setup() {
+		user = new User("exemplo@gmail", "123");
+		userRep.save(user);
+	}
 	
 	@Test
 	@DisplayName("Save Persister a task When Sucessful")
@@ -79,8 +92,9 @@ public class TaskRepositoryTest {
 	void findByTitleContainingIgnoreCase_returnTask_WhenSucessful() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
+		task.setUser(user);
 		rep.save(task);
-		Page<Task> optional = rep.findByTitleContainingIgnoreCaseAndUserLogin("Walk With Dog","alberto", pageable);
+		Page<Task> optional = rep.findByTitleContainingIgnoreCaseAndUserLogin(task.getTitle(),user.getLogin(), pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
@@ -98,8 +112,9 @@ public class TaskRepositoryTest {
 	void findByStatus_returnTask_WhenSucessful() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
+		task.setUser(user);
 		rep.save(task);
-		Page<Task> optional = rep.findByStatusAndUserLogin(Status.PENDING,"alberto", pageable);
+		Page<Task> optional = rep.findByStatusAndUserLogin(Status.PENDING,user.getLogin(), pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}
@@ -117,8 +132,9 @@ public class TaskRepositoryTest {
 	void findByPriority_returnTask_WhenSucessful() {
 		Pageable pageable = PageRequest.of(0, 10);
 		Task task = TaskUtilTest.returnTask();
+		task.setUser(user);
 		rep.save(task);
-		Page<Task> optional = rep.findByPriorityAndUserLogin(Priority.MEDIUM,"karlao", pageable);
+		Page<Task> optional = rep.findByPriorityAndUserLogin(Priority.MEDIUM,user.getLogin(), pageable);
 		
 		Assertions.assertThat(optional).isNotNull().isNotEmpty();
 	}

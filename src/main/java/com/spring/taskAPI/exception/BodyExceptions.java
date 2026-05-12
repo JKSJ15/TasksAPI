@@ -1,12 +1,20 @@
 package com.spring.taskAPI.exception;
 
 import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "Body response error")
 public class BodyExceptions {
+	@Schema(description = "Error Message", example = "Task not found")
 	private String message;
+	@Schema(description = "Date and time of error", example = "2026-04-23T10:15:30")
 	private LocalDateTime timestamp;
+	@Schema(description = "HTTP error name", example = "NOT_FOUND")
 	private HttpStatus erro;
+	@Schema(description = "HTTP status code", example = "404")
 	private int status;
 	
 	public String getMessage() {

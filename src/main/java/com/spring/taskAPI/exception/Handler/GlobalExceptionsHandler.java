@@ -21,13 +21,13 @@ public class GlobalExceptionsHandler {
 	@ExceptionHandler(value = TaskNotFoundException.class)
 	public ResponseEntity<BodyExceptions> useTaskNotFoundException(TaskNotFoundException e){
 		BodyExceptions body = BodyExceptions.builder().withMessage(e.getMessage()).withTimestamp(LocalDateTime.now())
-		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.BAD_REQUEST.value()).build();
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.NOT_FOUND.value()).build();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
 	}
 	@ExceptionHandler(value = UserNotFoundException.class)
 	public ResponseEntity<BodyExceptions> useUserNotFoundException(UserNotFoundException e){
 		BodyExceptions body = BodyExceptions.builder().withMessage(e.getMessage()).withTimestamp(LocalDateTime.now())
-		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.BAD_REQUEST.value()).build();
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+		.withErro(HttpStatus.BAD_REQUEST).withStatus(HttpStatus.NOT_FOUND.value()).build();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
 	}
 }

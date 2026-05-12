@@ -44,45 +44,34 @@ public class TaskService {
 	}
 	public TaskDto findById(long id){
 	        String login = getLoggedUser();
-
 	        Task task = tr.findByIdAndUserLogin(id, login).orElseThrow(()-> new TaskNotFoundException("Task Not Found!"));
 	        return TaskMapper.toDto(task);
 	}
 	public TaskDto save(TaskDto dto) {
-		if (dto.getDeadline().isBefore(LocalDate.now())) {
-			throw new InvalidAtributeException("Deadline cannot be in the past");
-		}
+		validateDates(dto);
 		Task task = TaskMapper.toTask(dto);
-		if (task.getStatus() == Status.COMPLETED) {
-			task.setDateConcl(LocalDate.now());
-		}
+		processTaskStatus(task);
 	        String login = getLoggedUser();
 	        User user = ur.findByLogin(login)
 	                .orElseThrow();
 	        task.setUser(user);
-	        
 	        Task taskSaved= tr.save(task);
 	        return TaskMapper.toDto(taskSaved);
 	}
 	public TaskDto update(Long id, TaskDto dto) {
-	    if (dto.getDeadline().isBefore(LocalDate.now())) {
-	        throw new InvalidAtributeException("Deadline cannot be in the past");
-	    }
+		validateDates(dto);
 	    if (!dto.getId().equals(id)) {
-	        throw new InvalidAtributeException("IDs of insert and saved don't combined!");
+	        throw new InvalidAtributeException("Path ID does not match request body ID!");
 	    }
 	    String login = getLoggedUser();
 	    Task task = tr.findByIdAndUserLogin(id, login)
 	            .orElseThrow(() -> new TaskNotFoundException("Task not found!"));
-	    
 	    task.setTitle(dto.getTitle());
 	    task.setDescription(dto.getDescription());
 	    task.setPriority(dto.getPriority());
 	    task.setStatus(dto.getStatus());
 	    task.setDeadline(dto.getDeadline());
-	    if (task.getStatus() == Status.COMPLETED) {
-	        task.setDateConcl(LocalDate.now());
-	    }
+	    processTaskStatus(task);
 	    tr.save(task);
 	    return TaskMapper.toDto(task);
 	}
@@ -97,5 +86,27 @@ public class TaskService {
 	    return SecurityContextHolder.getContext()
 	            .getAuthentication()
 	            .getName();
+	}
+	private void validateDates(TaskDto dto) {
+		LocalDate today = LocalDate.now();
+	    if (dto.getDeadline().isBefore(today)) {
+	        throw new InvalidAtributeException(
+	            "Deadline cannot be in the past"
+	        );
+	    }
+	    if (dto.getDateConcl() != null &&
+	        dto.getDateConcl().isAfter(today)) {
+
+	        throw new InvalidAtributeException(
+	            "DateConcl cannot be in the future"
+	        );
+	    }
+	}
+	private void processTaskStatus(Task task) {
+	    if (task.getStatus() == Status.COMPLETED) {
+	        task.setDateConcl(LocalDate.now());
+	    } else {
+	        task.setDateConcl(null);
+	    }
 	}
 }
