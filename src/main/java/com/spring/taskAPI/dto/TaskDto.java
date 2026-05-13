@@ -4,58 +4,45 @@ import java.time.LocalDate;
 
 import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
-import com.spring.taskAPI.entity.User;
-import com.spring.taskAPI.entity.Task.Builder;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class TaskDto {
-	
-    private Long id;
 
-    @NotBlank(message = "title of task cannot be empty")
-    @Schema(example = "Wash the dishes")
-    private String title;
+	private Long id;
 
-    @NotBlank(message = "description cannot be empty")
-    @Schema(example = "Wash dishes at the morning")
-    private String description;
+	@NotBlank(message = "title of task cannot be empty")
+	@Schema(example = "Wash the dishes")
+	private String title;
 
-    @NotNull(message = "status cannot be null")
-    @Schema(example = "PENDING")
-    private Status status;
+	@NotBlank(message = "description cannot be empty")
+	@Schema(example = "Wash dishes at the morning")
+	private String description;
 
-    @NotNull(message = "priority cannot be null")
-    @Schema(example = "MEDIUM")
-    private Priority priority;
-    
-    @Schema(
-    	    description = "Date when the task was completed",
-    	    example = "2026-05-07",
-    	    accessMode = Schema.AccessMode.READ_ONLY
-    	)
-    private LocalDate dateConcl;
-    
-    @NotNull(message = "deadline cannot be null")
-    @Schema(
-            description = "Deadline to complete the task",
-            example = "2026-05-06"
-        )
-    private LocalDate deadline;
+	@NotNull(message = "status cannot be null")
+	@Schema(example = "PENDING")
+	private Status status;
 
-    @NotNull(message = "createdAt cannot be null")
-    @Schema(
-        description = "Date the task was originally created",
-        example = "2026-05-06"
-    )
-    private LocalDate createdAt;
-    
+	@NotNull(message = "priority cannot be null")
+	@Schema(example = "MEDIUM")
+	private Priority priority;
 
-	public TaskDto() {}
-	
-	
+	@Schema(description = "Date when the task was completed", example = "2026-05-07", accessMode = Schema.AccessMode.READ_ONLY)
+	private LocalDate dateConcl;
+
+	@NotNull(message = "deadline cannot be null")
+	@Schema(description = "Deadline to complete the task", example = "2026-05-06")
+	private LocalDate deadline;
+
+	@NotNull(message = "createdAt cannot be null")
+	@Schema(description = "Date the task was originally created", example = "2026-05-06")
+	private LocalDate createdAt;
+
+	public TaskDto() {
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -63,46 +50,59 @@ public class TaskDto {
 	public LocalDate getDateConcl() {
 		return dateConcl;
 	}
+
 	public void setDateConcl(LocalDate dateConcl) {
 		this.dateConcl = dateConcl;
 	}
+
 	public LocalDate getDeadline() {
 		return deadline;
 	}
+
 	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
+
 	public LocalDate getCreatedAt() {
 		return createdAt;
 	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public Status getStatus() {
 		return status;
 	}
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
 	public Priority getPriority() {
 		return priority;
 	}
+
 	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
-	
+
 	private TaskDto(Builder builder) {
 		this.id = builder.id;
 		this.title = builder.title;
@@ -113,9 +113,11 @@ public class TaskDto {
 		this.deadline = builder.deadline;
 		this.createdAt = builder.createdAt;
 	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
+
 	public static final class Builder {
 		private Long id;
 		private String title;
@@ -173,8 +175,5 @@ public class TaskDto {
 			return new TaskDto(this);
 		}
 	}
-	
-	
-	
 
 }

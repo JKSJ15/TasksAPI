@@ -1,7 +1,5 @@
 package com.spring.taskAPI.entity;
 
 public enum Priority {
-	HIGH,
-	LOW,
-	MEDIUM
+	HIGH, LOW, MEDIUM
 }

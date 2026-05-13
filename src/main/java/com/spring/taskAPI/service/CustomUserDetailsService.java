@@ -6,12 +6,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.spring.taskAPI.entity.User;
-import com.spring.taskAPI.exception.UserNotFoundException;
 import com.spring.taskAPI.repository.UserRepository;
 
 @Service
-public class CustomUserDetailsService implements UserDetailsService{
+public class CustomUserDetailsService implements UserDetailsService {
 	private final UserRepository rep;
+
 	public CustomUserDetailsService(UserRepository rep) {
 		super();
 		this.rep = rep;
@@ -19,8 +19,8 @@ public class CustomUserDetailsService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = rep.findByLogin(username).orElseThrow(); 
+		User user = rep.findByLogin(username).orElseThrow();
 		return user;
 	}
-	
+
 }

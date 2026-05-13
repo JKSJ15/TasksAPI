@@ -16,7 +16,7 @@ public class BodyExceptions {
 	private HttpStatus erro;
 	@Schema(description = "HTTP status code", example = "404")
 	private int status;
-	
+
 	public String getMessage() {
 		return message;
 	}
@@ -55,7 +55,7 @@ public class BodyExceptions {
 		this.erro = builder.erro;
 		this.status = builder.status;
 	}
-	
+
 	public BodyExceptions(String message, LocalDateTime timestamp, HttpStatus erro, int status) {
 		super();
 		this.message = message;
@@ -101,7 +101,5 @@ public class BodyExceptions {
 			return new BodyExceptions(this);
 		}
 	}
-	
-	
-	
+
 }

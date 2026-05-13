@@ -16,44 +16,45 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "title")
-    @NotBlank(message = "title of task cannot be empty")
-    private String title;
+	@Column(name = "title")
+	@NotBlank(message = "title of task cannot be empty")
+	private String title;
 
-    @Column(name = "description")
-    @NotBlank(message = "description cannot be empty")
-    private String description;
+	@Column(name = "description")
+	@NotBlank(message = "description cannot be empty")
+	private String description;
 
-    @Column(name = "status", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "status cannot be null")
-    private Status status;
+	@Column(name = "status", nullable = false)
+	@Enumerated(EnumType.STRING)
+	@NotNull(message = "status cannot be null")
+	private Status status;
 
-    @Column(name = "priority", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "priority cannot be null")
-    private Priority priority;
+	@Column(name = "priority", nullable = false)
+	@Enumerated(EnumType.STRING)
+	@NotNull(message = "priority cannot be null")
+	private Priority priority;
 
-    @Column(name = "comp_date")
-    private LocalDate dateConcl;
+	@Column(name = "comp_date")
+	private LocalDate dateConcl;
 
-    @Column(name = "deadline")
-    @NotNull(message = "deadline cannot be null")
-    private LocalDate deadline;
+	@Column(name = "deadline")
+	@NotNull(message = "deadline cannot be null")
+	private LocalDate deadline;
 
-    @Column(name = "date_creation")
-    @NotNull(message = "createdAt cannot be null")
-    private LocalDate createdAt;
-    
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@Column(name = "date_creation")
+	@NotNull(message = "createdAt cannot be null")
+	private LocalDate createdAt;
 
-	public Task() {}
+	@ManyToOne
+	@JoinColumn(name = "user_id")
+	private User user;
+
+	public Task() {
+	}
 
 	private Task(Builder builder) {
 		this.id = builder.id;
@@ -64,16 +65,17 @@ public class Task {
 		this.dateConcl = builder.dateConcl;
 		this.deadline = builder.deadline;
 		this.createdAt = builder.createdAt;
-		 this.user = builder.user;
+		this.user = builder.user;
 	}
 
 	public User getUser() {
-        return user;
-    }
+		return user;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -81,48 +83,63 @@ public class Task {
 	public LocalDate getDateConcl() {
 		return dateConcl;
 	}
+
 	public void setDateConcl(LocalDate dateConcl) {
 		this.dateConcl = dateConcl;
 	}
+
 	public LocalDate getDeadline() {
 		return deadline;
 	}
+
 	public void setDeadline(LocalDate deadline) {
 		this.deadline = deadline;
 	}
+
 	public LocalDate getCreatedAt() {
 		return createdAt;
 	}
+
 	public Long getId() {
 		return id;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getDescription() {
 		return description;
 	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
 	public Status getStatus() {
 		return status;
 	}
+
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
 	public Priority getPriority() {
 		return priority;
 	}
+
 	public void setPriority(Priority priority) {
 		this.priority = priority;
 	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
+
 	public static final class Builder {
 		private Long id;
 		private String title;
@@ -176,7 +193,7 @@ public class Task {
 			this.createdAt = createdAt;
 			return this;
 		}
-		
+
 		public Builder withUser(User user) {
 			this.user = user;
 			return this;
@@ -186,10 +203,6 @@ public class Task {
 			return new Task(this);
 		}
 
-		
 	}
-	
-
-	
 
 }

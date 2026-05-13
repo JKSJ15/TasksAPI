@@ -28,85 +28,83 @@ public class TaskService {
 		this.tr = tr;
 		this.ur = ur;
 	}
-	public Page<TaskDto> list(String title, Status status, Priority priority, Pageable pageable){
+
+	public Page<TaskDto> list(String title, Status status, Priority priority, Pageable pageable) {
 		Page<Task> tasks;
 		String login = getLoggedUser();
-		if (title!=null) {
-			tasks = tr.findByTitleContainingIgnoreCaseAndUserLogin(title,login, pageable);
-		}else if (status!=null) {
-			tasks = tr.findByStatusAndUserLogin(status,login, pageable);
-		}else if (priority!=null) {
-			tasks = tr.findByPriorityAndUserLogin(priority,login, pageable);
-		}else {
-		        tasks = tr.findByUserLogin(login, pageable);
+		if (title != null) {
+			tasks = tr.findByTitleContainingIgnoreCaseAndUserLogin(title, login, pageable);
+		} else if (status != null) {
+			tasks = tr.findByStatusAndUserLogin(status, login, pageable);
+		} else if (priority != null) {
+			tasks = tr.findByPriorityAndUserLogin(priority, login, pageable);
+		} else {
+			tasks = tr.findByUserLogin(login, pageable);
 		}
 		return tasks.map(TaskMapper::toDto);
 	}
-	public TaskDto findById(long id){
-	        String login = getLoggedUser();
-	        Task task = tr.findByIdAndUserLogin(id, login).orElseThrow(()-> new TaskNotFoundException("Task Not Found!"));
-	        return TaskMapper.toDto(task);
+
+	public TaskDto findById(long id) {
+		String login = getLoggedUser();
+		Task task = tr.findByIdAndUserLogin(id, login).orElseThrow(() -> new TaskNotFoundException("Task Not Found!"));
+		return TaskMapper.toDto(task);
 	}
+
 	public TaskDto save(TaskDto dto) {
 		validateDates(dto);
 		Task task = TaskMapper.toTask(dto);
 		processTaskStatus(task);
-	        String login = getLoggedUser();
-	        User user = ur.findByLogin(login)
-	                .orElseThrow();
-	        task.setUser(user);
-	        Task taskSaved= tr.save(task);
-	        return TaskMapper.toDto(taskSaved);
+		String login = getLoggedUser();
+		User user = ur.findByLogin(login).orElseThrow();
+		task.setUser(user);
+		Task taskSaved = tr.save(task);
+		return TaskMapper.toDto(taskSaved);
 	}
+
 	public TaskDto update(Long id, TaskDto dto) {
 		validateDates(dto);
-	    if (!dto.getId().equals(id)) {
-	        throw new InvalidAtributeException("Path ID does not match request body ID!");
-	    }
-	    String login = getLoggedUser();
-	    Task task = tr.findByIdAndUserLogin(id, login)
-	            .orElseThrow(() -> new TaskNotFoundException("Task not found!"));
-	    task.setTitle(dto.getTitle());
-	    task.setDescription(dto.getDescription());
-	    task.setPriority(dto.getPriority());
-	    task.setStatus(dto.getStatus());
-	    task.setDeadline(dto.getDeadline());
-	    processTaskStatus(task);
-	    tr.save(task);
-	    return TaskMapper.toDto(task);
+		if (!dto.getId().equals(id)) {
+			throw new InvalidAtributeException("Path ID does not match request body ID!");
+		}
+		String login = getLoggedUser();
+		Task task = tr.findByIdAndUserLogin(id, login).orElseThrow(() -> new TaskNotFoundException("Task not found!"));
+		task.setTitle(dto.getTitle());
+		task.setDescription(dto.getDescription());
+		task.setPriority(dto.getPriority());
+		task.setStatus(dto.getStatus());
+		task.setDeadline(dto.getDeadline());
+		processTaskStatus(task);
+		tr.save(task);
+		return TaskMapper.toDto(task);
 	}
+
 	public void delete(long id) {
-	    String login = getLoggedUser();
-	    Task taskToBeDelete = tr.findByIdAndUserLogin(id, login)
-	            .orElseThrow(() -> new TaskNotFoundException("Task not found!"));
-	    tr.delete(taskToBeDelete);
+		String login = getLoggedUser();
+		Task taskToBeDelete = tr.findByIdAndUserLogin(id, login)
+				.orElseThrow(() -> new TaskNotFoundException("Task not found!"));
+		tr.delete(taskToBeDelete);
 	}
-	
+
 	private String getLoggedUser() {
-	    return SecurityContextHolder.getContext()
-	            .getAuthentication()
-	            .getName();
+		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
+
 	private void validateDates(TaskDto dto) {
 		LocalDate today = LocalDate.now();
-	    if (dto.getDeadline().isBefore(today)) {
-	        throw new InvalidAtributeException(
-	            "Deadline cannot be in the past"
-	        );
-	    }
-	    if (dto.getDateConcl() != null &&
-	        dto.getDateConcl().isAfter(today)) {
+		if (dto.getDeadline().isBefore(today)) {
+			throw new InvalidAtributeException("Deadline cannot be in the past");
+		}
+		if (dto.getDateConcl() != null && dto.getDateConcl().isAfter(today)) {
 
-	        throw new InvalidAtributeException(
-	            "DateConcl cannot be in the future"
-	        );
-	    }
+			throw new InvalidAtributeException("DateConcl cannot be in the future");
+		}
 	}
+
 	private void processTaskStatus(Task task) {
-	    if (task.getStatus() == Status.COMPLETED) {
-	        task.setDateConcl(LocalDate.now());
-	    } else {
-	        task.setDateConcl(null);
-	    }
+		if (task.getStatus() == Status.COMPLETED) {
+			task.setDateConcl(LocalDate.now());
+		} else {
+			task.setDateConcl(null);
+		}
 	}
 }

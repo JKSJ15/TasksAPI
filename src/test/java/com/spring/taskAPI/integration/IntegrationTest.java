@@ -138,8 +138,8 @@ public class IntegrationTest {
 	public void get_ReturnUNAUTHORIZED_WhenNoToken() throws Exception {
 		mvc.perform(get("/tasks")).andExpect(status().isUnauthorized());
 	}
-	
-	//GET BY ID
+
+	// GET BY ID
 	@Test
 	@DisplayName("getById_ReturnOK_WhenSucessful")
 	public void getById_ReturnOK_WhenSucessful() throws Exception {
@@ -150,7 +150,8 @@ public class IntegrationTest {
 	@Test
 	@DisplayName("getById_ReturnNOT_FOUND_WhenNoFound")
 	public void getById_ReturnNOT_FOUND_WhenNoFound() throws Exception {
-		mvc.perform(get("/tasks/{id}", 89898989l).header("Authorization", "Bearer " + token)).andExpect(status().isNotFound());
+		mvc.perform(get("/tasks/{id}", 89898989l).header("Authorization", "Bearer " + token))
+				.andExpect(status().isNotFound());
 	}
 
 	// POST

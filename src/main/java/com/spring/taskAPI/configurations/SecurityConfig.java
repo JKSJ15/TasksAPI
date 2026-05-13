@@ -18,33 +18,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 	private final SecurityFilter filter;
-	
+
 	public SecurityConfig(SecurityFilter filter) {
 		super();
 		this.filter = filter;
 	}
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable())
-				.sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.httpBasic(Customizer.withDefaults())
-				.authorizeHttpRequests(authorize -> authorize
-				.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
-				.requestMatchers("/tasks-doc/**",
-	                    "/tasks-doc",
-	                    "/tasks-api-docs/**",
-	                    "/tasks-api-docs",
-	                    "/swagger-ui/**",
-	                    "/actuator/prometheus",
-	            	    "/actuator/health").permitAll()
-				.anyRequest().authenticated())
-				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+						.requestMatchers("/tasks-doc/**", "/tasks-doc", "/tasks-api-docs/**", "/tasks-api-docs",
+								"/swagger-ui/**", "/actuator/prometheus", "/actuator/health")
+						.permitAll().anyRequest().authenticated())
+				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
 	}
+
 	@Bean
-	public AuthenticationManager authMan(AuthenticationConfiguration config) throws Exception{
+	public AuthenticationManager authMan(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
+
 	@Bean
 	public PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();

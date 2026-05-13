@@ -19,6 +19,7 @@ public class AuthService {
 	private final AuthenticationManager authMan;
 	private final PasswordEncoder encoder;
 	private final JwtService jwt;
+
 	public AuthService(UserRepository rep, AuthenticationManager authMan, PasswordEncoder encoder, JwtService jwt) {
 		super();
 		this.rep = rep;
@@ -27,18 +28,20 @@ public class AuthService {
 		this.jwt = jwt;
 	}
 
-
 	public void register(LoginDto login) {
 		Optional<User> find = rep.findByLogin(login.login());
-		if(find.isPresent()) {throw new InvalidAtributeException("User already exists!");}
+		if (find.isPresent()) {
+			throw new InvalidAtributeException("User already exists!");
+		}
 		String password = encoder.encode(login.password());
 		User user = new User(login.login(), password);
 		rep.save(user);
 	}
+
 	public String login(LoginDto login) {
 		var authtoke = new UsernamePasswordAuthenticationToken(login.login(), login.password());
 		var auth = authMan.authenticate(authtoke);
-		User user =(User) auth.getPrincipal();
+		User user = (User) auth.getPrincipal();
 		return jwt.generateToken(user);
 	}
 }

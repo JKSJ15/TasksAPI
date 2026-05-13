@@ -8,18 +8,8 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
-@OpenAPIDefinition(
-	    info = @Info(
-	        title = "Tasks API",
-	        description = "API for management of tasks"
-	    )
-	)
-	@SecurityScheme(
-	    name = "bearerAuth",
-	    type = SecuritySchemeType.HTTP,
-	    scheme = "bearer",
-	    bearerFormat = "JWT"
-	)
+@OpenAPIDefinition(info = @Info(title = "Tasks API", description = "API for management of tasks"))
+@SecurityScheme(name = "bearerAuth", type = SecuritySchemeType.HTTP, scheme = "bearer", bearerFormat = "JWT")
 public class OpenApiConfig {
 
 }
