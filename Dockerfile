@@ -1,9 +1,17 @@
+FROM maven:3.9.9-eclipse-temurin-21 AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN .\mvnw clean package -DskipTests
+
 FROM eclipse-temurin:21-jdk
 
-WORKDIR /tasks
+WORKDIR /app
+
+COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
 
-COPY target/tasks.jar tasks.jar
-
-ENTRYPOINT ["java", "-jar", "tasks.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
