@@ -25,24 +25,26 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.httpBasic(Customizer.withDefaults())
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll()
 						.requestMatchers("/tasks-doc/**", "/tasks-doc", "/tasks-api-docs/**", "/tasks-api-docs",
-								"/swagger-ui/**", "/actuator/prometheus", "/actuator/health")
-						.permitAll().anyRequest().authenticated())
+								"/swagger-ui/**", "/actuator/prometheus", "/actuator/health").permitAll()
+						.requestMatchers(HttpMethod.POST, "/exit").authenticated()
+						.anyRequest().authenticated())
 				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class).build();
 	}
 
 	@Bean
-	public AuthenticationManager authMan(AuthenticationConfiguration config) throws Exception {
+	AuthenticationManager authMan(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
 
 	@Bean
-	public PasswordEncoder encoder() {
+	PasswordEncoder encoder() {
 		return new BCryptPasswordEncoder();
 	}
 }

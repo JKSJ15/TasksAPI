@@ -11,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Task {
@@ -20,33 +18,27 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "title")
-	@NotBlank(message = "title of task cannot be empty")
+	@Column(name = "title", nullable = false)
 	private String title;
 
-	@Column(name = "description")
-	@NotBlank(message = "description cannot be empty")
+	@Column(name = "description", nullable = false)
 	private String description;
 
 	@Column(name = "status", nullable = false)
 	@Enumerated(EnumType.STRING)
-	@NotNull(message = "status cannot be null")
 	private Status status;
 
 	@Column(name = "priority", nullable = false)
 	@Enumerated(EnumType.STRING)
-	@NotNull(message = "priority cannot be null")
 	private Priority priority;
 
 	@Column(name = "comp_date")
 	private LocalDate dateConcl;
 
-	@Column(name = "deadline")
-	@NotNull(message = "deadline cannot be null")
+	@Column(name = "deadline", nullable = false)
 	private LocalDate deadline;
 
-	@Column(name = "date_creation")
-	@NotNull(message = "createdAt cannot be null")
+	@Column(name = "date_creation", nullable = false)
 	private LocalDate createdAt;
 
 	@ManyToOne

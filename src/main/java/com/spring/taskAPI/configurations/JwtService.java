@@ -3,7 +3,12 @@ package com.spring.taskAPI.configurations;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,32 +20,65 @@ import com.spring.taskAPI.entity.User;
 
 @Service
 public class JwtService {
-	@Value("${api.security.token.secret}")
-	private String secret;
+	private static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+	private final Algorithm algorithm;
+
+	public JwtService(@Value("${api.security.token.secret}") String secret) {
+		this.algorithm = Algorithm.HMAC256(secret);
+	}
 
 	public String generateToken(User user) {
+		logger.debug("Generating access token for user {}", user.getLogin());
 		try {
-			Algorithm augorithm = Algorithm.HMAC256(secret);
 			String token = JWT.create().withExpiresAt(generateExpireTime()).withIssuer("tasksAPI")
-					.withSubject(user.getLogin()).sign(augorithm);
+					.withSubject(user.getLogin()).sign(algorithm);
 			return token;
 		} catch (JWTCreationException e) {
-			throw new RuntimeException("Error while generation JWT token " + e);
+			logger.error("Error generating JWT token", e);
+			throw new RuntimeException("Error while generation JWT token ");
+		}
+	}
+
+	public String generateRefreshToken(User user) {
+		logger.debug("Generating refresh token for user {}", user.getLogin());
+		try {
+			String refreshToken = JWT.create().withJWTId(UUID.randomUUID().toString())
+					.withExpiresAt(Date.from(Instant.now().plus(7, ChronoUnit.DAYS))).withIssuer("tasksAPI")
+					.withIssuedAt(new Date()).withSubject(user.getLogin()).sign(algorithm);
+			return refreshToken;
+		} catch (JWTCreationException e) {
+			logger.error("Error generating JWT token", e);
+			throw new RuntimeException("Error while generation JWT refresh token ");
 		}
 	}
 
 	public String validToken(String token) {
 		try {
-			Algorithm augorithm = Algorithm.HMAC256(secret);
-			String ValidatedToken = JWT.require(augorithm).withIssuer("tasksAPI").build().verify(token).getSubject();
-			return ValidatedToken;
+			String validatedToken = JWT.require(algorithm).withIssuer("tasksAPI").build().verify(token).getSubject();
+			return validatedToken;
 		} catch (JWTVerificationException e) {
+			logger.warn("Invalid or expired JWT token");
 			return null;
 		}
 
 	}
 
+	public boolean validRefreshToken(String token) {
+		try {
+			JWT.require(algorithm).withIssuer("tasksAPI").build().verify(token).getSubject();
+			return true;
+		} catch (JWTVerificationException e) {
+			logger.warn("Invalid or expired refresh token");
+			return false;
+		}
+
+	}
+
+	public String extractUserLogin(String token) {
+		return JWT.require(algorithm).withIssuer("tasksAPI").build().verify(token).getSubject();
+	}
+
 	private Instant generateExpireTime() {
-		return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+		return LocalDateTime.now().plusMinutes(15).toInstant(ZoneOffset.of("-03:00"));
 	}
 }

@@ -1,10 +1,35 @@
 services:
 
+  mysql:
+    image: mysql:8
+    container_name: mysql-tasks
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3307:3306"
+
   app:
     build: .
     container_name: tasks-app
     restart: always
-    ports:
-      - "8080:8080"
+    depends_on:
+      - mysql
     env_file:
       - .env
+    ports:
+      - "8080:8080"
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - app

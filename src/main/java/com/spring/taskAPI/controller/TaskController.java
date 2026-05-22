@@ -1,5 +1,7 @@
 package com.spring.taskAPI.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,10 +36,11 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-	private final TaskService ts;
+	private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
+	private final TaskService taskService;
 
-	public TaskController(TaskService ts) {
-		this.ts = ts;
+	public TaskController(TaskService taskService) {
+		this.taskService = taskService;
 	}
 
 	// GET ALL
@@ -50,7 +53,10 @@ public class TaskController {
 			@Parameter(description = "Filter by title") @RequestParam(required = false) String title,
 			@Parameter(description = "Filter by status") @RequestParam(required = false) Status status,
 			@Parameter(description = "Filter by priority") @RequestParam(required = false) Priority priority) {
-		return new ResponseEntity<>(ts.list(title, status, priority, pageable), HttpStatus.OK);
+
+		logger.info("GET /tasks filters -> title: {}, status: {}, priority: {}", title, status, priority);
+		return new ResponseEntity<>(taskService.list(title, status, priority, pageable), HttpStatus.OK);
+
 	}
 
 	// GETBYID
@@ -61,7 +67,10 @@ public class TaskController {
 			@ApiResponse(responseCode = "404", description = "Task not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@GetMapping("/{id}")
 	public ResponseEntity<TaskDto> findById(@Parameter(description = "ID of the task") @PathVariable long id) {
-		return new ResponseEntity<>(ts.findById(id), HttpStatus.OK);
+
+		logger.info("GET /tasks/{} request received", id);
+		return new ResponseEntity<>(taskService.findById(id), HttpStatus.OK);
+
 	}
 
 	@Operation(summary = "Create new task", description = "Save a new task for the user")
@@ -72,7 +81,10 @@ public class TaskController {
 	@PostMapping
 	public ResponseEntity<TaskDto> save(
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Task data to be saved") @RequestBody @Valid TaskDto dto) {
-		return new ResponseEntity<>(ts.save(dto), HttpStatus.CREATED);
+
+		logger.info("POST /tasks create request received");
+		return new ResponseEntity<>(taskService.save(dto), HttpStatus.CREATED);
+
 	}
 
 	@Operation(summary = "Delete task by ID", description = "Remove a task by its ID")
@@ -81,8 +93,12 @@ public class TaskController {
 			@ApiResponse(responseCode = "404", description = "Task not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@Parameter(description = "ID of the task") @PathVariable long id) {
-		ts.delete(id);
+
+		logger.info("DELETE /tasks/{} request received", id);
+		taskService.delete(id);
+		logger.info("Task {} deleted", id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
 	}
 
 	@Operation(summary = "Update task by ID", description = "Update an existing task by its ID")
@@ -94,6 +110,11 @@ public class TaskController {
 	@PutMapping("/{id}")
 	public ResponseEntity<TaskDto> update(@Parameter(description = "ID of the task") @PathVariable long id,
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Task data to be updated") @RequestBody @Valid TaskDto dto) {
-		return new ResponseEntity<>(ts.update(id, dto), HttpStatus.OK);
+
+		logger.info("PUT /tasks/{} request received", id);
+		TaskDto updated = taskService.update(id, dto);
+		logger.info("Task {} updated successfully", id);
+
+		return new ResponseEntity<>(updated, HttpStatus.OK);
 	}
 }
