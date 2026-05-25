@@ -17,6 +17,7 @@ A complete REST API for task management built with Java and Spring Boot, featuri
 ## Authentication & Security
 
 * JWT Authentication
+* JWT Refresh Token authentication
 * Spring Security integration
 * Protected routes
 * Login and register endpoints
@@ -30,8 +31,9 @@ A complete REST API for task management built with Java and Spring Boot, featuri
 * List tasks with pagination
 * Task status management
 * Priority control
+* Application logging
 
-## Rule-Based AI 🧠
+## Rule-Based 🧠
 
 The project includes an intelligent risk analysis engine capable of evaluating tasks automatically based on:
 
@@ -41,13 +43,13 @@ The project includes an intelligent risk analysis engine capable of evaluating t
 
 ### Example endpoint
 
-```http id="l4c4xe"
+```http
 GET /tasks/risk
 ```
 
 ### Example response
 
-```json id="ejb7f5"
+```json
 {
   "content": [
     {
@@ -87,12 +89,29 @@ https://tasksapi-e8kt.onrender.com/swagger-ui/index.html
 * MockMvc
 * Pageable API
 * REST APIs
+* Logging
+
+---
+
+# 🏗 Architecture
+
+The project follows a layered architecture:
+
+Controller → Service → Repository
+
+Using:
+
+* DTO pattern
+* Mapper pattern
+* Global exception handling
+* Stateless JWT authentication
+* Separation of concerns
 
 ---
 
 # 📂 Project Structure
 
-```text id="ag6m0z"
+```text
 src
 ├── configurations
 │   ├── JwtService.java
@@ -107,12 +126,14 @@ src
 │
 ├── dto
 │   ├── LoginDto.java
-│   ├── LoginResponseDto.java
 │   ├── TaskDto.java
-│   └── TaskRiskAiDto.java
+│   ├── TaskRiskAiDto.java
+│   ├── TokenRefreshRequestDto.java
+│   └── TokenRefreshResponseDto.java
 │
 ├── entity
 │   ├── Priority.java
+│   ├── RefreshToken.java
 │   ├── Status.java
 │   ├── Task.java
 │   └── User.java
@@ -120,21 +141,29 @@ src
 ├── exception
 │   ├── BodyExceptions.java
 │   ├── InvalidAtributeException.java
+│   ├── InvalidRefreshTokenException.java
 │   ├── TaskNotFoundException.java
-│   └── UserNotFoundException.java
+│   ├── TokenWasExpiredException.java
+│   ├── UserNotFoundException.java
+│   └── handler
+│       └── GlobalExceptionHandler.java
 │
 ├── mapper
 │   └── TaskMapper.java
 │
 ├── repository
 │   ├── TaskRepository.java
+│   ├── TokenRefreshRepository.java
 │   └── UserRepository.java
 │
 ├── service
 │   ├── AuthService.java
 │   ├── CustomUserDetailsService.java
 │   ├── TaskRiskService.java
-│   └── TaskService.java
+│   ├── TaskService.java
+│   ├── TokenRefreshService.java
+│   └── UserService.java
+│
 └── resources
     └── application.properties
 ```
@@ -152,11 +181,12 @@ The project includes:
 
 Main test files:
 
-```text id="qg5oc1"
+```text
 TaskControllerTest.java
 TaskRepositoryTest.java
 TaskServiceTest.java
-IntegrationTest.java
+AuthIntegrationTest.java
+TasksIntegrationTest.java
 ```
 
 ---
@@ -172,7 +202,7 @@ Included files:
 
 Run locally with:
 
-```bash id="8mxwlu"
+```bash
 docker-compose up --build
 ```
 
@@ -182,14 +212,16 @@ docker-compose up --build
 
 ### Example login/register request
 
-```json id="a5u2u6"
+```json
 {
   "login": "admin",
   "password": "123456"
 }
 ```
 
-Login returns a JWT token used to access protected endpoints.
+Login returns:
+- a JWT access token used to access protected endpoints
+- a JWT refresh token used to generate new access tokens
 
 ---
 
@@ -199,13 +231,14 @@ This project was built to improve knowledge in:
 
 * Backend architecture
 * REST APIs
-* Authentication
+* Authentication and authorization
 * Spring ecosystem
 * Docker
-* Testing
+* Automated testing
 * Clean code
-* Rule-Based AI systems
-* Deploy system
+* Rule-Based systems
+* Deployment
+* JWT access and refresh tokens
 
 ---
 
