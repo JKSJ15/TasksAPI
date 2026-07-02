@@ -1,9 +1,10 @@
-name: CI TasksAPI
+name: CI/CD TasksAPI
 
 on:
   push:
     branches:
       - master
+
   pull_request:
     branches:
       - master
@@ -31,3 +32,19 @@ jobs:
 
       - name: Build da aplicação
         run: ./mvnw package -DskipTests
+
+  deploy:
+    name: Deploy no Render
+
+    needs: build
+
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Acionar Deploy Hook do Render
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          curl -X POST "$DEPLOY_HOOK"
