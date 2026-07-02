@@ -90,6 +90,7 @@ https://tasksapi-e8kt.onrender.com/swagger-ui/index.html
 * Pageable API
 * REST APIs
 * Logging
+* CI (Continuous Integration)
 
 ---
 
