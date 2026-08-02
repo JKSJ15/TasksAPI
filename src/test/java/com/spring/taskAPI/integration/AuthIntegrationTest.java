@@ -114,10 +114,10 @@ public class AuthIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("register_ReturnBAD_REQUEST_WhenUserAlreadyExist")
-	public void register_ReturnBAD_REQUEST_WhenUserAlreadyExist() throws Exception {
+	@DisplayName("register_ReturnCONFLICT_WhenUserAlreadyExist")
+	public void register_ReturnCONFLICT_WhenUserAlreadyExist() throws Exception {
 		mvc.perform(post("/auth/register").contentType(MediaType.APPLICATION_JSON).content(loginJson))
-				.andExpect(status().isBadRequest());
+				.andExpect(status().isConflict());
 	}
 
 	@Test
