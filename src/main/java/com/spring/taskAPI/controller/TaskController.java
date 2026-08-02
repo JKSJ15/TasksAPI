@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,9 +32,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @Tag(name = "Task")
 @RestController
+@Validated
 @RequestMapping("/tasks")
 public class TaskController {
 	private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
@@ -66,7 +69,8 @@ public class TaskController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized or missing token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
 			@ApiResponse(responseCode = "404", description = "Task not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@GetMapping("/{id}")
-	public ResponseEntity<TaskDto> findById(@Parameter(description = "ID of the task") @PathVariable long id) {
+	public ResponseEntity<TaskDto> findById(
+			@Parameter(description = "ID of the task") @PathVariable @Min(value = 1, message = "ID must be a positive number") long id) {
 
 		logger.info("GET /tasks/{} request received", id);
 		return new ResponseEntity<>(taskService.findById(id), HttpStatus.OK);
@@ -92,7 +96,7 @@ public class TaskController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized or missing token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
 			@ApiResponse(responseCode = "404", description = "Task not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> delete(@Parameter(description = "ID of the task") @PathVariable long id) {
+	public ResponseEntity<Void> delete(@Parameter(description = "ID of the task") @PathVariable @Min(value = 1, message = "ID must be a positive number") long id) {
 
 		logger.info("DELETE /tasks/{} request received", id);
 		taskService.delete(id);
@@ -108,7 +112,7 @@ public class TaskController {
 			@ApiResponse(responseCode = "401", description = "Unauthorized or missing token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
 			@ApiResponse(responseCode = "404", description = "Task not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@PutMapping("/{id}")
-	public ResponseEntity<TaskDto> update(@Parameter(description = "ID of the task") @PathVariable long id,
+	public ResponseEntity<TaskDto> update(@Parameter(description = "ID of the task") @PathVariable @Min(value = 1, message = "ID must be a positive number") long id,
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Task data to be updated") @RequestBody @Valid TaskDto dto) {
 
 		logger.info("PUT /tasks/{} request received", id);

@@ -1,9 +1,12 @@
 package com.spring.taskAPI.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
 public record TokenRefreshRequestDto(
-		@Schema(description = "JWT refresh token to be sent in the endpoint /refresh in the Authorization header", example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20ifQ.signature")
+		@Schema(description = "JWT refresh token to be sent in the endpoint /refresh in the Authorization header",
+		example = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBlbWFpbC5jb20ifQ.signature")
+		@NotBlank(message = "Refresh token cannot be empty or null")
 		String refreshToken) {
 
 }

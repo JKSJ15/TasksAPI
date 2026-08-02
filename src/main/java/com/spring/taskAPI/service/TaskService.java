@@ -14,6 +14,7 @@ import com.spring.taskAPI.entity.Priority;
 import com.spring.taskAPI.entity.Status;
 import com.spring.taskAPI.entity.Task;
 import com.spring.taskAPI.entity.User;
+import com.spring.taskAPI.exception.InvalidAccessTokenException;
 import com.spring.taskAPI.exception.InvalidAtributeException;
 import com.spring.taskAPI.exception.TaskNotFoundException;
 import com.spring.taskAPI.exception.UserNotFoundException;
@@ -65,7 +66,7 @@ public class TaskService {
 		processTaskStatus(task);
 		String login = getLoggedUser();
 		logger.info("Creating task for user {}", login);
-		User user = ur.findByLogin(login).orElseThrow(() -> new UserNotFoundException("User not found!"));
+		User user = ur.findByLogin(login).orElseThrow(() -> new InvalidAccessTokenException("Not Authenticated!"));
 		task.setUser(user);
 		Task taskSaved = tr.save(task);
 		logger.info("Task {} created successfully", taskSaved.getId());

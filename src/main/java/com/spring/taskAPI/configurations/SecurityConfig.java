@@ -17,11 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-	private final SecurityFilter filter;
+    private final SecurityFilter filter;
+	private final CustomAuthenticationEntryPoint CustomAuthenticationEntryPoint;
 
-	public SecurityConfig(SecurityFilter filter) {
+	public SecurityConfig(SecurityFilter filter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
 		super();
 		this.filter = filter;
+		this.CustomAuthenticationEntryPoint = customAuthenticationEntryPoint;
 	}
 
 	@Bean
@@ -29,6 +31,7 @@ public class SecurityConfig {
 		return http.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.httpBasic(Customizer.withDefaults())
+				.exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(CustomAuthenticationEntryPoint))
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register", "/auth/refresh").permitAll()
 						.requestMatchers("/tasks-doc/**", "/tasks-doc", "/tasks-api-docs/**", "/tasks-api-docs",

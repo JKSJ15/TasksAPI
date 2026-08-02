@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.spring.taskAPI.entity.RefreshToken;
 import com.spring.taskAPI.entity.User;
 import com.spring.taskAPI.exception.InvalidRefreshTokenException;
-import com.spring.taskAPI.exception.TokenWasExpiredException;
 import com.spring.taskAPI.repository.TokenRefreshRepository;
 import com.spring.taskAPI.repository.UserRepository;
 
@@ -28,9 +27,9 @@ public class TokenRefreshService {
 	}
 
 	public RefreshToken validate(String refreshToken) {
-		RefreshToken token = tokenRepository.findByRefreshToken(refreshToken).orElseThrow(()-> new InvalidRefreshTokenException("Refresh Token Not Found"));
+		RefreshToken token = tokenRepository.findByRefreshToken(refreshToken).orElseThrow(()-> new InvalidRefreshTokenException("invalid refresh token!"));
 		if (token.isExpired(token.getExpiresAt())) {
-			throw new TokenWasExpiredException("token refresh expired");
+			throw new InvalidRefreshTokenException("invalid refresh token!");
 		}
 		return token;
 	}

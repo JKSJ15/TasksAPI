@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = rep.findByLogin(username).orElseThrow();
+		User user = rep.findByLogin(username).orElseThrow(()-> new UsernameNotFoundException("Invalid login!"));
 		return user;
 	}
 
