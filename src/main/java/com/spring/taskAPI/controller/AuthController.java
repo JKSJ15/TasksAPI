@@ -56,8 +56,8 @@ public class AuthController {
 
 	@Operation(summary = "User registration", description = "Register a new user")
 	@ApiResponses({ @ApiResponse(responseCode = "201", description = "User successfully registered"),
-			@ApiResponse(responseCode = "400", description = "User already exists", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
-			@ApiResponse(responseCode = "401", description = "Invalid credentials") })
+			@ApiResponse(responseCode = "409", description = "User already exists", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
+			@ApiResponse(responseCode = "401", description = "Invalid credentials - login or password or access") })
 	@PostMapping("/register")
 	public ResponseEntity<Void> register(
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User registration data") @RequestBody @Valid LoginDto login) {
@@ -72,7 +72,7 @@ public class AuthController {
 	@Operation(summary = "Refresh token", description = "Generate a new refresh and acess token")
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "Generate successfully", content = @Content(mediaType = "application/json", schema = @Schema(implementation = TokenRefreshResponseDto.class))),
 			@ApiResponse(responseCode = "400", description = "No body/token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))),
-			@ApiResponse(responseCode = "401", description = "Invalid refresh token or expired token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
+			@ApiResponse(responseCode = "401", description = "Invalid refresh or access token", content = @Content(mediaType = "application/json", schema = @Schema(implementation = BodyExceptions.class))) })
 	@PostMapping("/refresh")
 	public ResponseEntity<TokenRefreshResponseDto> refresh(
 			@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User refresh token") @RequestBody @Valid TokenRefreshRequestDto request) {
@@ -84,7 +84,7 @@ public class AuthController {
 
 	@Operation(summary = "Logout")
 	@ApiResponses({ @ApiResponse(responseCode = "204", description = "Logout successfully"),
-			@ApiResponse(responseCode = "401", description = "Invalid access token/expired token") })
+			@ApiResponse(responseCode = "401", description = "Invalid access token") })
 	@PostMapping("/logout")
 	public ResponseEntity<Void> logout(Authentication authentication) {
 		
